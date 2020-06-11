@@ -148,6 +148,44 @@ class CocoDataset(CustomDataset):
             seg_map=seg_map)
 
         return ann
+    
+    def resample_by_rule(self, resampling_rule):
+        """
+        Create resampling index for a rule. The rules have to be
+        implemented for each dataset individually
+
+        Args:
+            resampling (str): Resampling rule. 
+
+        """
+        assert resampling_rule in ['repeat_factor_resamling']
+        
+        if resampling_rule == 'repeat_factor_resmpling':
+            resampling = repeat_factor_sampling(tau=0.001)
+        
+        return resampling
+    
+    def repeat_factor_sampling(tau=0.001):
+        # get resampling factor by category
+        R = {}
+        for cat in coco.cats:
+            f_c = len(np.unique(coco.catToImgs[cat])) / len(coco.imgs)
+            r_c = 1 if f_c == 0 else max(1, np.sqrt(tau/f_c))
+            R[cat] = r_c
+
+        # get resampling factor per image
+        resampling_dict = {}
+        for img in coco.imgs:
+            anns = coco.imgToAnns[img]
+            r_i = 1 if len(anns) == 0 else max([R[ann['category_id']] for ann in anns])
+            resampling_dict[img] = r_i
+            
+        # reorder
+        resampling = []
+        for img in self.data_infos:
+            resampling.append(r_i[img['id']])
+
+        return resampling
 
     def xyxy2xywh(self, bbox):
         _bbox = bbox.tolist()

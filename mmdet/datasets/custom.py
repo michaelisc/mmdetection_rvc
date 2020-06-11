@@ -45,7 +45,8 @@ class CustomDataset(Dataset):
                  seg_prefix=None,
                  proposal_file=None,
                  test_mode=False,
-                 filter_empty_gt=True):
+                 filter_empty_gt=True,
+                 data_resampling=None):
         self.ann_file = ann_file
         self.data_root = data_root
         self.img_prefix = img_prefix
@@ -53,6 +54,7 @@ class CustomDataset(Dataset):
         self.proposal_file = proposal_file
         self.test_mode = test_mode
         self.filter_empty_gt = filter_empty_gt
+        self.data_resampling = data_resampling
         self.CLASSES = self.get_classes(classes)
 
         # join paths if data_root is specified
@@ -72,6 +74,9 @@ class CustomDataset(Dataset):
         # filter data infos if classes are customized
         if self.custom_classes:
             self.data_infos = self.get_subset_by_classes()
+        # resample data if resampling is chosen
+        if self.data_resampling is not None:
+            self.data_infos = self.resample_data(self.data_resampling)
 
         if self.proposal_file is not None:
             self.proposals = self.load_proposals(self.proposal_file)
@@ -192,6 +197,39 @@ class CustomDataset(Dataset):
 
     def get_subset_by_classes(self):
         return self.data_infos
+    
+    def resample_data(self, resampling, resampling_cfg=None):
+        """
+        Resample images
+
+        Args:
+            resampling (Sequence[int] | int | str): Resampling can be done
+            with a custom list of image frequencies, with a fixed ratio 
+            (helpful when combining multiple datasets) or following a rule.
+
+        """
+        if isinstance(resampling, (tuple, list)):
+            assert len(resampling) == len(self.data_infos)
+        elif isinstance(resampling, int):
+            resampling = [resampling for i in range(len(self.data_infos))]
+        elif isinstance(resampling, str):
+            resampling = resample_by_rule(resampling)
+            
+        if any([isinstance(x, float) for x in resampling]):
+            raise ValueError(f'Resampling factors must be integers.')
+        
+        return [self.data_infos[i] for i in range(len(self.data_infos)) for j in range(resampling[i])]
+    
+    def resample_by_rule(self, resampling_rule):
+        """
+        Create resampling index for a rule. The rules have to be
+        implemented for each dataset individually
+
+        Args:
+            resampling (str): Resampling rule. 
+
+        """
+        raise NotImplementedError(f'Resampling by rule is not available for this dataset.')
 
     def format_results(self, results, **kwargs):
         pass
