@@ -1,96 +1,26 @@
-# MMDetection
+# MMDetection for the Robust Vision Challenge
 
-**News**: We released the technical report on [ArXiv](https://arxiv.org/abs/1906.07155).
+This is an adaptation of MMDetection for the [ECCV2020](https://eccv2020.eu/) [Robust Vision Challenge](https://www.robustvision.net/).
 
-Documentation: https://mmdetection.readthedocs.io/
+### Features
 
-## Introduction
+- **RVC Dataset**
 
-The master branch works with **PyTorch 1.3 to 1.5**.
-The old v1.x branch works with PyTorch 1.1 to 1.4, but v2.0 is strongly recommended for faster speed, higher performance, better design and more friendly usage.
+  Includes a RVC dataset using the annotations converted with the [RVC Toolkit](https://github.com/ozendelait/rvc_devkit).
 
-MMDetection is an open source object detection toolbox based on PyTorch. It is
-a part of the OpenMMLab project developed by [Multimedia Laboratory, CUHK](http://mmlab.ie.cuhk.edu.hk/).
+- **Resample Datasets**
 
-![demo image](demo/coco_test_12510.jpg)
+  Flexible dataset resampling [function](tools/resample_rvc_dataset.py)
 
-### Major features
+- **Baseline Model**
 
-- **Modular Design**
+  Includes [config files](configs/robust_vision_challenge/README.md) that were used to train the official object detection baseline submission.
 
-  We decompose the detection framework into different components and one can easily construct a customized object detection framework by combining different modules.
 
-- **Support of multiple frameworks out of box**
+## MMDetection README
 
-  The toolbox directly supports popular and contemporary detection frameworks, *e.g.* Faster RCNN, Mask RCNN, RetinaNet, etc.
+The original MMDetection readme can be found in [MMDETECTION_README.md](MMDETECTION_README.md).
 
-- **High efficiency**
-
-  All basic bbox and mask operations run on GPUs. The training speed is faster than or comparable to other codebases, including [Detectron2](https://github.com/facebookresearch/detectron2), [maskrcnn-benchmark](https://github.com/facebookresearch/maskrcnn-benchmark) and [SimpleDet](https://github.com/TuSimple/simpledet).
-
-- **State of the art**
-
-  The toolbox stems from the codebase developed by the *MMDet* team, who won [COCO Detection Challenge](http://cocodataset.org/#detection-leaderboard) in 2018, and we keep pushing it forward.
-
-Apart from MMDetection, we also released a library [mmcv](https://github.com/open-mmlab/mmcv) for computer vision research, which is heavily depended on by this toolbox.
-
-## License
-
-This project is released under the [Apache 2.0 license](LICENSE).
-
-## Changelog
-
-v2.1.0 was released in 8/6/2020.
-Please refer to [changelog.md](docs/changelog.md) for details and release history.
-A comparison between v1.x and v2.0 codebases can be found in [compatibility.md](docs/compatibility.md).
-
-## Benchmark and model zoo
-
-Supported methods and backbones are shown in the below table.
-Results and models are available in the [model zoo](docs/model_zoo.md).
-
-|                    | ResNet   | ResNeXt  | SENet    | VGG      | HRNet | RegNetX | Res2Net |
-|--------------------|:--------:|:--------:|:--------:|:--------:|:-----:|:--------:|:-----:|
-| RPN                | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| Fast R-CNN         | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| Faster R-CNN       | ✓        | ✓        | ☐        | ✗        | ✓     | ✓        | ✓     |
-| Mask R-CNN         | ✓        | ✓        | ☐        | ✗        | ✓     | ✓        | ✓     |
-| Cascade R-CNN      | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ✓     |
-| Cascade Mask R-CNN | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ✓     |
-| SSD                | ✗        | ✗        | ✗        | ✓        | ✗     | ✗        | ✗     |
-| RetinaNet          | ✓        | ✓        | ☐        | ✗        | ✓     | ✓        | ☐     |
-| GHM                | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| Mask Scoring R-CNN | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| Double-Head R-CNN  | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| Grid R-CNN (Plus)  | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| Hybrid Task Cascade| ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ✓     |
-| Libra R-CNN        | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| Guided Anchoring   | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| FCOS               | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| RepPoints          | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| Foveabox           | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| FreeAnchor         | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| NAS-FPN            | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| ATSS               | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| FSAF               | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| PAFPN              | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| NAS-FCOS           | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-| PISA               | ✓        | ✓        | ☐        | ✗        | ✓     | ☐        | ☐     |
-
-Other features
-- [x] [CARAFE](configs/carafe/README.md)
-- [x] [DCNv2](configs/dcn/README.md)
-- [x] [Group Normalization](configs/gn/README.md)
-- [x] [Weight Standardization](configs/gn+ws/README.md)
-- [x] [OHEM](configs/faster_rcnn/faster_rcnn_r50_fpn_ohem_1x_coco.py)
-- [x] [Soft-NMS](configs/faster_rcnn/faster_rcnn_r50_fpn_soft_nms_1x_coco.py)
-- [x] [Generalized Attention](configs/empirical_attention/README.md)
-- [x] [GCNet](configs/gcnet/README.md)
-- [x] [Mixed Precision (FP16) Training](configs/fp16/README.md)
-- [x] [InstaBoost](configs/instaboost/README.md)
-- [x] [GRoIE](configs/groie/README.md)
-
-Some other methods are also supported in [projects using MMDetection](./docs/projects.md).
 
 ## Installation
 
@@ -101,19 +31,12 @@ Please refer to [install.md](docs/install.md) for installation and dataset prepa
 
 Please see [getting_started.md](docs/getting_started.md) for the basic usage of MMDetection. There are also tutorials for [finetuning models](docs/tutorials/finetune.md), [adding new dataset](docs/tutorials/new_dataset.md), [designing data pipeline](docs/tutorials/data_pipeline.md), and [adding new modules](docs/tutorials/new_modules.md).
 
-## Contributing
-
-We appreciate all contributions to improve MMDetection. Please refer to [CONTRIBUTING.md](.github/CONTRIBUTING.md) for the contributing guideline.
-
-## Acknowledgement
-
-MMDetection is an open source project that is contributed by researchers and engineers from various colleges and companies. We appreciate all the contributors who implement their methods or add new features, as well as users who give valuable feedbacks.
-We wish that the toolbox and benchmark could serve the growing research community by providing a flexible toolkit to reimplement existing methods and develop their own new detectors.
 
 
 ## Citation
 
-If you use this toolbox or benchmark in your research, please cite this project.
+This toolbox is based on MMDetection, a flexible and powerful open source object detection toolkit. 
+If you use is in your submission or research, please cite their project.
 
 ```
 @article{mmdetection,
@@ -129,8 +52,11 @@ If you use this toolbox or benchmark in your research, please cite this project.
 }
 ```
 
+## License
+
+This project is released under the [Apache 2.0 license](LICENSE) building upon [MMDetection](https://github.com/open-mmlab/mmdetection).
+
 
 ## Contact
 
-This repo is currently maintained by Kai Chen ([@hellock](http://github.com/hellock)), Yuhang Cao ([@yhcao6](https://github.com/yhcao6)), Wenwei Zhang ([@ZwwWayne](https://github.com/ZwwWayne)),
-Jiarui Xu ([@xvjiarui](https://github.com/xvjiarui)). Other core developers include Jiangmiao Pang ([@OceanPang](https://github.com/OceanPang)) and Jiaqi Wang ([@myownskyW7](https://github.com/myownskyW7)).
+This repo is currently maintained by Claudio Michaelis ([@michaelisc](http://github.com/michaelisc)).
